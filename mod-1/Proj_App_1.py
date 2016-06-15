@@ -1,8 +1,9 @@
-'''
+"""
 Author: Ko-Shin Chen
 Algorithmic Thinking (Part 1)
 Project 1: Degree Distributions for Graphs
-'''
+Application 1: Analysis of Citation Graphs
+"""
 
 #Example Graphs
 EX_GRAPH0 = {0: set([1,2]), 1: set([]), 2: set([])}
@@ -18,10 +19,10 @@ EX_GRAPH2 = {0: set([1,4,5]), 1:set([2,6]), \
              9: set([0,3,4,5,6,7])}
 
 def make_complete_graph(num_nodes):
-    '''
+    """
     This function generate the complete directed graph with
     the given number of vertices.
-    '''
+    """
     
     comp_graph = {}
     all_vertex = set(range(num_nodes))
@@ -35,10 +36,10 @@ def make_complete_graph(num_nodes):
 
 
 def compute_in_degrees(digraph):
-    '''
+    """
     This function returns in-degrees for each vertex for 
     the given directed graph
-    '''
+    """
     
     in_degree = {}
     all_vertex = digraph.keys()
@@ -54,10 +55,10 @@ def compute_in_degrees(digraph):
 
 
 def in_degree_distribution(digraph):
-    '''
+    """
     This function returns in-degree distribution for 
     the given directed graph
-    '''
+    """
     
     in_degree = compute_in_degrees(digraph)
     all_vertex = in_degree.keys()
@@ -72,3 +73,42 @@ def in_degree_distribution(digraph):
             degree_dist[degree_value] = 1
             
     return degree_dist
+    
+    
+##############################################################
+# For Application
+
+import alg_load_graph
+import alg_dpa_trial
+
+CITATION_URL = "http://storage.googleapis.com/codeskulptor-alg/alg_phys-cite.txt"
+citation_graph = alg_load_graph.load_graph(CITATION_URL)
+
+cite_dist = in_degree_distribution(citation_graph)
+
+"""
+Question 3
+"""
+all_vertex = citation_graph.keys()
+out_degree = 0
+for dummy_vertex in citation_graph.keys():
+    out_degree += len(citation_graph[dummy_vertex])
+
+ave_out = out_degree/27770.0    
+print ave_out
+
+
+"""
+Question 4
+"""
+m = 13
+n = 27770
+
+dpa_graph = make_complete_graph(m)
+trial = alg_dpa_trial.DPATrial(m)
+
+for index in range(m,n):
+    nbd = trial.run_trial(m)
+    dpa_graph[index] = nbd
+    
+dpa_dist = in_degree_distribution(dpa_graph)
